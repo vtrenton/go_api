@@ -31,5 +31,14 @@ func Authorization(next http.Handler) http.Handler {
 
 		var loginDetails = *tools.LoginDetails
 		loginDetails = (*database).GetUserLoginDetails(username)
+
+		if loginDetails == nil || (token != (*loginDetails).AuthToken) {
+			log.Error(UnauthorizedError)
+			api.RequestErrorHandler(w, UnauthorizedError)
+			return
+		}
+
+		// Call the next middleware function
+		next.ServeHTTP(w, r)
 	})
 }
