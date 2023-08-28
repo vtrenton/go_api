@@ -29,8 +29,7 @@ func Authorization(next http.Handler) http.Handler {
 			api.InternalErrorHandler(w)
 		}
 
-		var loginDetails *tools.LoginDetails
-		loginDetails = (*database).GetUserLoginDetails(username)
+		var loginDetails *tools.LoginDetails = (*database).GetUserLoginDetails(username)
 
 		if loginDetails == nil || (token != (*loginDetails).AuthToken) {
 			log.Error(UnauthorizedError)
