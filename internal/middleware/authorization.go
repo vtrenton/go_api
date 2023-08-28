@@ -6,7 +6,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 	"github.com/vtrenton/go_api/api"
-	//"github.com/vtrenton/go_api/internal/tools"
+	"github.com/vtrenton/go_api/internal/tools"
 )
 
 var UnauthorizedError = errors.New("Invalid Username or token.")
@@ -38,7 +38,7 @@ func Authorization(next http.Handler) http.Handler {
 			return
 		}
 
-		// Call the next middleware function
+		// Call the next middleware function or the handler if there is no middleware left in line
 		next.ServeHTTP(w, r)
 	})
 }
