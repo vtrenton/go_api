@@ -3,6 +3,10 @@ package middleware
 import (
 	"errors"
 	"net/http"
+
+	log "github.com/sirupsen/logrus"
+	"github.com/vtrenton/go_api/api"
+	//"github.com/vtrenton/go_api/internal/tools"
 )
 
 var UnauthorizedError = errors.New("Invalid Username or token.")
@@ -14,7 +18,18 @@ func Authorization(next http.Handler) http.Handler {
 		var err error
 
 		if username == "" || token == "" {
-
+			log.Error(UnauthorizedError)
+			api.RequestErrorHandler(w, UnauthorizedError)
+			return
 		}
+
+		var database *tools.DatabaseInterface
+		database, err = tools.NewDatabase()
+		if err != nil {
+			api.InternalErrorHandler(w)
+		}
+
+		var loginDetails = *tools.LoginDetails
+		loginDetails = (*database).GetUserLoginDetails(username)
 	})
 }
